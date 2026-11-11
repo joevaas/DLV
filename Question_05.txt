@@ -1,0 +1,66 @@
+QUESTION 5
+
+Implement image segmentation using a CNN model.
+
+AIM
+To implement the given task using Python and obtain the required output.
+
+ALGORITHM
+1. Start the program.
+2. Import TensorFlow and Keras libraries.
+3. Load matching input images and segmentation masks.
+4. Resize images and masks to the required dimensions.
+5. Normalize the images and convert masks into binary values.
+6. Build a CNN encoder-decoder model with convolution and upsampling layers.
+7. Compile the model using binary cross-entropy loss.
+8. Train the model using the image and mask pairs.
+9. Save the trained segmentation model.
+10. Stop the program.
+
+PROGRAM
+import tensorflow as tf
+from tensorflow.keras import layers, Model
+
+IMG_SIZE = 128
+BATCH_SIZE = 8
+
+def load_pair(image_path, mask_path):
+    image = tf.io.read_file(image_path)
+    image = tf.image.decode_image(image, channels=3, expand_animations=False)
+    image = tf.image.resize(image, (IMG_SIZE, IMG_SIZE)) / 255.0
+
+    mask = tf.io.read_file(mask_path)
+    mask = tf.image.decode_image(mask, channels=1, expand_animations=False)
+    mask = tf.image.resize(mask, (IMG_SIZE, IMG_SIZE), method="nearest")
+    mask = tf.cast(mask > 127, tf.float32)
+    return image, mask
+
+image_paths = sorted(tf.io.gfile.glob("images/*"))
+mask_paths = sorted(tf.io.gfile.glob("masks/*"))
+if not image_paths or len(image_paths) != len(mask_paths):
+    raise ValueError("Add matching files to images/ and masks/ folders.")
+
+dataset = tf.data.Dataset.from_tensor_slices((image_paths, mask_paths))
+dataset = dataset.map(load_pair).batch(BATCH_SIZE).prefetch(tf.data.AUTOTUNE)
+
+inputs = layers.Input((IMG_SIZE, IMG_SIZE, 3))
+c1 = layers.Conv2D(16, 3, activation="relu", padding="same")(inputs)
+p1 = layers.MaxPooling2D()(c1)
+c2 = layers.Conv2D(32, 3, activation="relu", padding="same")(p1)
+u1 = layers.UpSampling2D()(c2)
+concat = layers.Concatenate()([u1, c1])
+outputs = layers.Conv2D(1, 1, activation="sigmoid")(concat)
+
+model = Model(inputs, outputs)
+model.compile(optimizer="adam", loss="binary_crossentropy",
+              metrics=["accuracy"])
+model.fit(dataset, epochs=5)
+model.save("image_segmentation_model.keras")
+print("Segmentation model trained and saved.")
+
+OUTPUT
+Expected output:
+The program displays training progress and saves the trained model as image_segmentation_model.keras.
+
+RESULT
+Thus, the given task was implemented successfully using Python.

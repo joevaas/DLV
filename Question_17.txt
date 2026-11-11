@@ -1,0 +1,40 @@
+QUESTION 17
+
+Load and implement a pretrained VGG16 model for image classification.
+
+AIM
+To implement the given task using Python and obtain the required output.
+
+ALGORITHM
+1. Start the program.
+2. Import TensorFlow and the VGG16 application utilities.
+3. Load the pretrained VGG16 model with ImageNet weights.
+4. Read the input image and resize it to 224 × 224 pixels.
+5. Convert the image into an array and preprocess it.
+6. Pass the image to the VGG16 model for prediction.
+7. Decode and display the top five predicted classes with confidence scores.
+8. Stop the program.
+
+PROGRAM
+import tensorflow as tf
+from tensorflow.keras.applications import VGG16
+from tensorflow.keras.applications.vgg16 import preprocess_input, decode_predictions
+from tensorflow.keras.preprocessing import image
+import numpy as np
+
+model = VGG16(weights="imagenet")
+img = image.load_img("input.jpg", target_size=(224, 224))
+x = image.img_to_array(img)
+x = np.expand_dims(x, axis=0)
+x = preprocess_input(x)
+
+predictions = model.predict(x)
+for _, label, probability in decode_predictions(predictions, top=5)[0]:
+    print(label, ":", round(float(probability) * 100, 2), "%")
+
+OUTPUT
+Expected output:
+The program displays the top five ImageNet class predictions with confidence percentages for input.jpg.
+
+RESULT
+Thus, the given task was implemented successfully using Python.

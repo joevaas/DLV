@@ -1,0 +1,50 @@
+QUESTION 15
+
+Write a Python program to perform basic Image processing operations including Feature Representation and Feature Extraction.
+
+AIM
+To implement the given task using Python and obtain the required output.
+
+ALGORITHM
+1. Start the program.
+2. Import OpenCV and NumPy libraries.
+3. Read the input image.
+4. Convert the image into grayscale and resize it.
+5. Apply Gaussian blur and Canny edge detection.
+6. Use ORB to detect keypoints and extract feature descriptors.
+7. Save the processed images and display the number of keypoints.
+8. Stop the program.
+
+PROGRAM
+import cv2
+import numpy as np
+
+image = cv2.imread("input.jpg")
+if image is None:
+    raise FileNotFoundError("Place input.jpg in this folder.")
+
+gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+resized = cv2.resize(image, (256, 256))
+blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+edges = cv2.Canny(blurred, 100, 200)
+
+orb = cv2.ORB_create()
+keypoints, descriptors = orb.detectAndCompute(gray, None)
+feature_image = cv2.drawKeypoints(image, keypoints, None,
+                                  color=(0, 255, 0))
+
+cv2.imwrite("gray.jpg", gray)
+cv2.imwrite("resized.jpg", resized)
+cv2.imwrite("edges.jpg", edges)
+cv2.imwrite("features.jpg", feature_image)
+
+print("Image processing completed.")
+print("Number of keypoints:", len(keypoints))
+print("Descriptor shape:", None if descriptors is None else descriptors.shape)
+
+OUTPUT
+Expected output:
+Image processing completed. The number of keypoints and descriptor shape are displayed. Processed images are saved as gray.jpg, resized.jpg, edges.jpg and features.jpg.
+
+RESULT
+Thus, the given task was implemented successfully using Python.

@@ -1,0 +1,55 @@
+QUESTION 13
+
+Implement an RNN model for sequential data processing.
+
+AIM
+To implement the given task using Python and obtain the required output.
+
+ALGORITHM
+1. Start the program.
+2. Import NumPy and TensorFlow libraries.
+3. Generate sequential sample data.
+4. Create input sequences using a fixed-size sliding window.
+5. Split the sequences into training and testing sets.
+6. Construct an RNN model with a SimpleRNN layer and output layer.
+7. Compile and train the model.
+8. Evaluate the model and predict the next sequence value.
+9. Display the error and predicted value.
+10. Stop the program.
+
+PROGRAM
+import numpy as np
+import tensorflow as tf
+from tensorflow.keras import layers, Sequential
+
+series = np.sin(np.arange(0, 1000) * 0.02).astype("float32")
+window = 20
+X, y = [], []
+for i in range(len(series) - window):
+    X.append(series[i:i + window])
+    y.append(series[i + window])
+
+X = np.array(X)[..., np.newaxis]
+y = np.array(y)
+split = int(0.8 * len(X))
+X_train, X_test = X[:split], X[split:]
+y_train, y_test = y[:split], y[split:]
+
+model = Sequential([
+    layers.Input(shape=(window, 1)),
+    layers.SimpleRNN(32, activation="tanh"),
+    layers.Dense(1)
+])
+model.compile(optimizer="adam", loss="mse", metrics=["mae"])
+model.fit(X_train, y_train, epochs=10, batch_size=32, verbose=0)
+loss, mae = model.evaluate(X_test, y_test, verbose=0)
+prediction = model.predict(X_test[:1], verbose=0)[0][0]
+print("Test MAE:", round(float(mae), 4))
+print("Next value prediction:", round(float(prediction), 4))
+
+OUTPUT
+Expected output:
+The program displays the test mean absolute error and predicted next sequence value.
+
+RESULT
+Thus, the given task was implemented successfully using Python.

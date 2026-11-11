@@ -1,0 +1,52 @@
+QUESTION 9
+
+Implement a simple artificial neural network using Python.
+
+AIM
+To implement the given task using Python and obtain the required output.
+
+ALGORITHM
+1. Start the program.
+2. Import the required NumPy and Scikit-learn libraries.
+3. Load the Iris dataset and separate input features and target labels.
+4. Split the dataset into training and testing sets.
+5. Standardize the input features.
+6. Create an artificial neural network with hidden layers.
+7. Train the network using the training data.
+8. Predict the test labels and calculate accuracy.
+9. Display the actual labels, predicted labels and accuracy.
+10. Stop the program.
+
+PROGRAM
+import numpy as np
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import accuracy_score
+
+data = load_iris()
+X, y = data.data, data.target
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y)
+
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+model = MLPClassifier(hidden_layer_sizes=(10, 8),
+                      activation="relu", max_iter=1000,
+                      random_state=42)
+model.fit(X_train, y_train)
+pred = model.predict(X_test)
+
+print("Actual labels:   ", y_test)
+print("Predicted labels:", pred)
+print("Accuracy:", round(accuracy_score(y_test, pred) * 100, 2), "%")
+
+OUTPUT
+Expected output:
+The program displays the actual labels, predicted labels and ANN classification accuracy.
+
+RESULT
+Thus, the given task was implemented successfully using Python.

@@ -1,0 +1,47 @@
+QUESTION 14
+
+Write a Python program to implement a Generative model for image editing.
+
+AIM
+To implement the given task using Python and obtain the required output.
+
+ALGORITHM
+1. Start the program.
+2. Import PyTorch, PIL and the Stable Diffusion inpainting pipeline.
+3. Load the pretrained inpainting model.
+4. Read the original image and its mask.
+5. Resize both images to the required dimensions.
+6. Provide a text prompt describing the required edit.
+7. Pass the prompt, original image and mask to the model.
+8. Generate the edited image and save it.
+9. Stop the program.
+
+PROGRAM
+import torch
+from PIL import Image
+from diffusers import StableDiffusionInpaintPipeline
+
+MODEL_ID = "runwayml/stable-diffusion-inpainting"
+pipe = StableDiffusionInpaintPipeline.from_pretrained(
+    MODEL_ID, torch_dtype=torch.float16).to("cuda")
+
+image = Image.open("input.jpg").convert("RGB").resize((512, 512))
+mask = Image.open("mask.png").convert("RGB").resize((512, 512))
+
+result = pipe(
+    prompt="A realistic, naturally blended edited scene",
+    image=image,
+    mask_image=mask,
+    num_inference_steps=30,
+    guidance_scale=7.5
+).images[0]
+
+result.save("edited_image.png")
+print("Edited image saved as edited_image.png")
+
+OUTPUT
+Expected output:
+The edited image is saved as edited_image.png.
+
+RESULT
+Thus, the given task was implemented successfully using Python.
