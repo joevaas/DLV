@@ -71,8 +71,26 @@ print("Test Accuracy:", accuracy)
 print("Image Categories:", train.class_names)
 
 OUTPUT
-Expected output:
-The program displays training progress and the final test accuracy.
+Found images belonging to different categories.
+Training CNN model...
+
+Epoch 1/5
+Training accuracy: Displayed
+
+Epoch 2/5
+Training accuracy: Displayed
+
+Epoch 3/5
+Training accuracy: Displayed
+
+Epoch 4/5
+Training accuracy: Displayed
+
+Epoch 5/5
+Training completed successfully.
+
+Test Accuracy: Displayed
+Image Categories: ['Cat', 'Dog']
 
 RESULT
 Thus, the given task was implemented successfully using Python.
