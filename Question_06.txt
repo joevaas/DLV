@@ -18,38 +18,53 @@ ALGORITHM
 10. Stop the program.
 
 PROGRAM
+
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras import layers, Sequential
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense, Dropout
 
-series = np.sin(np.arange(0, 1000) * 0.02).astype("float32")
-window = 20
-X, y = [], []
-for i in range(len(series) - window):
-    X.append(series[i:i + window])
-    y.append(series[i + window])
+# Generate sample video data
+# 100 videos, 10 frames, 64 features
+X = np.random.rand(100, 10, 64)
 
-X = np.array(X)[..., np.newaxis]
-y = np.array(y)
-split = int(0.8 * len(X))
-X_train, X_test = X[:split], X[split:]
-y_train, y_test = y[:split], y[split:]
+# Generate video labels (3 classes)
+y = np.random.randint(0, 3, 100)
 
+# Build LSTM model
 model = Sequential([
-    layers.Input(shape=(window, 1)),
-    layers.SimpleRNN(32, activation="tanh"),
-    layers.Dense(1)
+    LSTM(128, input_shape=(10, 64)),
+    Dropout(0.3),
+    Dense(64, activation='relu'),
+    Dense(3, activation='softmax')
 ])
-model.compile(optimizer="adam", loss="mse", metrics=["mae"])
-model.fit(X_train, y_train, epochs=10, batch_size=32, verbose=0)
-loss, mae = model.evaluate(X_test, y_test, verbose=0)
-prediction = model.predict(X_test[:1], verbose=0)[0][0]
-print("Test MAE:", round(float(mae), 4))
-print("Next value prediction:", round(float(prediction), 4))
+
+# Compile the model
+model.compile(
+    optimizer='adam',
+    loss='sparse_categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+# Train the model
+model.fit(X, y, epochs=10, batch_size=16)
+
+# Evaluate the model
+loss, accuracy = model.evaluate(X, y)
+
+print("Test Accuracy:", accuracy)
+
+# Predict video class
+prediction = model.predict(X[:1])
+print("Predicted Class:", np.argmax(prediction))
 
 OUTPUT
-Expected output:
-The program displays the test mean absolute error and predicted next sequence value.
+Epoch 1/10
+...
+Epoch 10/10
+...
+Test Accuracy: (value between 0 and 1)
+Predicted Class: 0
 
 RESULT
 Thus, the given task was implemented successfully using Python.
